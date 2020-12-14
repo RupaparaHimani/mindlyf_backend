@@ -23,9 +23,23 @@ const knex = require('knex')({
 
 // Handle index actions
 exports.list = function (req, res) {
-    knex.select('id','mobile_number','email','first_name')
+    console.log(req.query);
+    knex.select('id','number','email','first_name', 'last_name', 'type')
       .from('t_user')
-      .where({is_archived:0})
+      .where({user_type: req.query.type})
+      .then((response)=>{
+        res.json({
+            message: 'All users fetched!',
+            users: response
+        });
+      });
+};
+
+exports.offline_list = function (req, res) {
+    console.log(req.query);
+    knex.select('id','number','email','first_name', 'last_name', 'type')
+      .from('t_user')
+      .where({user_type: 'patient'})
       .then((response)=>{
         res.json({
             message: 'All users fetched!',
@@ -82,19 +96,16 @@ exports.getsearchresult = function (req, res) {
 };
 
 exports.info = function (req, res) {
-    Contact.findById(req.params.userId, function (err, contacts) {
-        if (err) {
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        res.json({
-            status: "success",
-            message: "Users retrieved successfully",
-            users: contacts
-        });
-    });
+  console.log("info", req.params.userId);
+  knex.select('id', 'first_name', 'last_name', 'email', 'number')
+    .from('t_user')
+    .where({id: req.params.userId})
+    .then((response)=>{
+      res.json({
+          message: 'Fetched User',
+          user: response[0]
+      });
+    })
 };
 
 
@@ -102,8 +113,8 @@ exports.info = function (req, res) {
 exports.update_pdf = function(req, res){
   console.log("update_pdf", req.body);
   knex.select('id')
-    .from('t_user')
-    .where({id: req.body.id})
+    .from('t_orders')
+    .where({id: req.body.order_id, userID: req.body.user_id})
     .update({
       pdf_blob: req.body.pdf_blob
     })
@@ -176,7 +187,7 @@ exports.order = function (req, res) {
         });
         res.json({
             message: 'Record inserted',
-            user: response[0]
+            order: response[0]
         });
       }).catch((err) => {
           console.log(err);
@@ -198,12 +209,35 @@ exports.order = function (req, res) {
         });
           res.json({
               message: 'Record inserted',
-              user: response[0]
+              order: response[0]
           });
         }).catch((err) => {
             console.log(err);
         })
-    }else{
+    }else if (req.body.test_id != undefined){
+      console.log("else");
+      knex('t_orders').insert({userID: req.body.userID, amount: req.body.amount, orderID: req.body.orderID, purpose: req.body.purpose , testID: req.body.test_id })
+        .then((response)=>{
+          sendMail(req.body.email,"Test booked","Your test has been booked!", text)
+            .then(() => {
+              res.json({
+                message: 'Email send',
+              });
+            }).catch ((err) => {
+          return res.status(500).json({
+            message: "Error while sending mail",
+            error: err.message
+          });
+        });
+          res.json({
+              message: 'Record inserted',
+              order: response[0]
+          });
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    else{
       knex('t_orders').insert({userID: req.body.userID, amount: req.body.amount, orderID: req.body.orderID, purpose: req.body.purpose })
         .then((response)=>{
           sendMail(req.body.email,"Session booked",'',text)
@@ -219,7 +253,7 @@ exports.order = function (req, res) {
         });
           res.json({
               message: 'Record inserted',
-              user: response[0]
+              order: response[0]
           });
         }).catch((err) => {
             console.log(err);
@@ -263,3 +297,20 @@ exports.verifyMail = function (req, res) {
           console.log(err);
       })
 };
+
+
+exports.deleteUser = function (req, res) {
+  console.log("delete");
+  console.log(req.params);
+  knex("t_user")
+  .del()
+  .where({
+    id: req.params.id
+  }).then((response)=>{
+    console.log(response);
+    res.json({
+        message: 'Delete User',
+        id: req.params.id
+    });
+  });
+}

@@ -18,6 +18,7 @@ var serviceController = require('./Controllers/serviceController');
 var programController = require('./Controllers/programController');
 var emailController = require('./Controllers/emailController');
 var blogController = require('./Controllers/blogController');
+var testController = require('./Controllers/testController');
 
 // Contact routes
 router.route('/contacts')
@@ -40,6 +41,9 @@ router.route('/sign-up')
 //Users
 router.route('/users')
     .get(userController.list);
+//Users
+router.route('/offline_list')
+    .get(userController.offline_list);
 
 // search result
 router.route('/getsearchresult/:searchparam')
@@ -52,7 +56,7 @@ router.route('/user/:userId')
 router.route('/getCounsellors')
 .get(userController.getCounsellors);
 
-
+router.route("/delete_user/:id").delete(userController.deleteUser);
 //Update User
 router.route('/update')
     .post(userController.update);
@@ -89,6 +93,11 @@ router.route("/delete_blog/:id").delete(blogController.deleteBlog);
 router.route("/updateBlog").post(blogController.updateBlog);
 router.route("/get_blog/:id").get(blogController.get_blog);
 router.route("/get_blogs").get(blogController.get_blogs);
+
+
+router.route("/get_tests").get(testController.get_tests);
+router.route("/get_paid_tests").get(testController.get_paid_tests);
+router.route("/create_test").post(testController.create_test);
 
 router.route("/change_password").post(userController.change_password);
 

@@ -45,7 +45,6 @@ exports.auth = function (req, res) {
 };
 
 exports.sign = function (req, res) {
-  console.log("--------");
     knex('t_user').where({email: req.body.email}).then((response) => {
         console.log(response)
         if(response.length){
@@ -66,7 +65,16 @@ exports.sign = function (req, res) {
           if(req.body.counsellor != 1){
             req.body.counsellor = 0;
           }
-            knex('t_user').insert({number: req.body.number, email: req.body.email, first_name: req.body.fname, last_name: req.body.lname, password: req.body.password, comment: req.body.comment, counsellor: req.body.counsellor})
+          let user_type, type;
+          if(req.body.user_type != undefined)
+            user_type = req.body.user_type
+          else
+            user_type = 'patient'
+          if(req.body.type != undefined)
+            type = req.body.type
+          else
+            type = 'online'
+            knex('t_user').insert({number: req.body.number, email: req.body.email, first_name: req.body.fname, last_name: req.body.lname, password: req.body.password, comment: req.body.comment, counsellor: req.body.counsellor, user_type: user_type, type: type})
             .then((response)=>{
                 knex.select('id','number','email','first_name','last_name')
                 .from('t_user')

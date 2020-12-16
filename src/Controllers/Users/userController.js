@@ -1,25 +1,25 @@
 Contact = require('../../Model/userModel');
 const { sendMail } = require('../../Utils/email')
 
-const knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host: "localhost",
-      user: "root",
-      password: "KN<MS5JA~X0oaSqF",
-      database : 'mindlyfa_mindlyftest'
-    }
-  });
-
 // const knex = require('knex')({
 //     client: 'mysql',
 //     connection: {
-//         host : 'localhost',
-//         user : 'root',
-//         password : 'password',
-//         database : 'mindlyf'
+//       host: "localhost",
+//       user: "root",
+//       password: "KN<MS5JA~X0oaSqF",
+//       database : 'mindlyfa_mindlyftest'
 //     }
 //   });
+
+const knex = require('knex')({
+    client: 'mysql',
+    connection: {
+        host : 'localhost',
+        user : 'root',
+        password : 'password',
+        database : 'mindlyf'
+    }
+  });
 
 // Handle index actions
 exports.list = function (req, res) {
@@ -97,7 +97,7 @@ exports.getsearchresult = function (req, res) {
 
 exports.info = function (req, res) {
   console.log("info", req.params.userId);
-  knex.select('id', 'first_name', 'last_name', 'email', 'number')
+  knex.select('id', 'first_name', 'last_name', 'email', 'number', 'schedule')
     .from('t_user')
     .where({id: req.params.userId})
     .then((response)=>{
@@ -112,14 +112,26 @@ exports.info = function (req, res) {
 
 exports.update_pdf = function(req, res){
   console.log("update_pdf", req.body);
-  knex.select('id')
+  knex.select('id','testID', 'userID', 'pdf_blob')
     .from('t_orders')
     .where({id: req.body.order_id, userID: req.body.user_id})
     .update({
       pdf_blob: req.body.pdf_blob
     })
     .then((response)=>{
-    console.log("success");
+      console.log("res", response);
+      knex.select('id','testID','userID','pdf_blob')
+      .from('t_orders')
+      .where({id: req.body.order_id})
+      .then((data)=>{
+        console.log(data, "daata");
+          res.json({
+              message: 'User Found!',
+              test: data
+          });
+      }).catch((err) => {
+        console.log(err);
+      })
     }).catch((err) => {
         console.log(err);
     })
@@ -144,6 +156,12 @@ exports.change_password = function(req, res){
 
 
 exports.update = function (req, res) {
+    let schedule;
+    if(req.body.schedule != undefined){
+      schedule = JSON.stringify( req.body.schedule);
+    }else{
+      schedule = ''
+    }
     knex.select('id','number','email','first_name','last_name')
       .from('t_user')
       .where({id: req.body.id})
@@ -152,7 +170,8 @@ exports.update = function (req, res) {
         first_name: req.body.fname,
         last_name: req.body.lname,
         email: req.body.email,
-        number: req.body.number
+        number: req.body.number,
+        schedule: schedule
       })
       .then((response)=>{
         knex.select('id','number','email','first_name','last_name')

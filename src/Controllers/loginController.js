@@ -1,25 +1,25 @@
 Contact = require('../Model/userModel');
 const { sendMail } = require('../Utils/email')
 
-const knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host: "localhost",
-      user: "root",
-      password: "KN<MS5JA~X0oaSqF",
-      database : 'mindlyfa_mindlyftest'
-    }
-  });
-
 // const knex = require('knex')({
 //     client: 'mysql',
 //     connection: {
-//         host : 'localhost',
-//         user : 'root',
-//         password : 'password',
-//         database : 'mindlyf'
+//       host: "localhost",
+//       user: "root",
+//       password: "KN<MS5JA~X0oaSqF",
+//       database : 'mindlyfa_mindlyftest'
 //     }
 //   });
+
+const knex = require('knex')({
+    client: 'mysql',
+    connection: {
+        host : 'localhost',
+        user : 'root',
+        password : 'password',
+        database : 'mindlyf'
+    }
+  });
 
 
 exports.auth = function (req, res) {
@@ -45,6 +45,7 @@ exports.auth = function (req, res) {
 };
 
 exports.sign = function (req, res) {
+  console.log(req.body);
     knex('t_user').where({email: req.body.email}).then((response) => {
         console.log(response)
         if(response.length){
@@ -65,7 +66,7 @@ exports.sign = function (req, res) {
           if(req.body.counsellor != 1){
             req.body.counsellor = 0;
           }
-          let user_type, type;
+          let user_type, type, schedule;
           if(req.body.user_type != undefined)
             user_type = req.body.user_type
           else
@@ -74,7 +75,11 @@ exports.sign = function (req, res) {
             type = req.body.type
           else
             type = 'online'
-            knex('t_user').insert({number: req.body.number, email: req.body.email, first_name: req.body.fname, last_name: req.body.lname, password: req.body.password, comment: req.body.comment, counsellor: req.body.counsellor, user_type: user_type, type: type})
+          if(req.body.schedule != undefined)
+            schedule = JSON.stringify( req.body.schedule);
+          else
+            schedule = ''
+            knex('t_user').insert({number: req.body.number, email: req.body.email, first_name: req.body.fname, last_name: req.body.lname, password: req.body.password, comment: req.body.comment, counsellor: req.body.counsellor, user_type: user_type, type: type, schedule: schedule})
             .then((response)=>{
                 knex.select('id','number','email','first_name','last_name')
                 .from('t_user')

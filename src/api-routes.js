@@ -45,6 +45,9 @@ router.route('/users')
 router.route('/offline_list')
     .get(userController.offline_list);
 
+router.route('/doctors')
+    .get(userController.doctors);
+
 // search result
 router.route('/getsearchresult/:searchparam')
     .get(userController.getsearchresult);

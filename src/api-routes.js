@@ -19,6 +19,7 @@ var programController = require('./Controllers/programController');
 var emailController = require('./Controllers/emailController');
 var blogController = require('./Controllers/blogController');
 var testController = require('./Controllers/testController');
+var appoinmentController = require('./Controllers/appoinmentController');
 
 // Contact routes
 router.route('/contacts')
@@ -97,6 +98,9 @@ router.route("/updateBlog").post(blogController.updateBlog);
 router.route("/get_blog/:id").get(blogController.get_blog);
 router.route("/get_blogs").get(blogController.get_blogs);
 
+// Appoinment
+router.route("/create_appoinment").post(appoinmentController.create_appoinment);
+router.route("/get_appoinments").get(appoinmentController.get_appoinments);
 
 router.route("/get_tests").get(testController.get_tests);
 router.route("/get_paid_tests").get(testController.get_paid_tests);

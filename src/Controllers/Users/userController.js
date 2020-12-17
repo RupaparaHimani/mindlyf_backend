@@ -48,6 +48,19 @@ exports.offline_list = function (req, res) {
       });
 };
 
+exports.doctors = function (req, res) {
+    console.log(req.query);
+    knex.select('id','number','email','first_name', 'last_name', 'type', 'schedule')
+      .from('t_user')
+      .where({user_type: 'doctor'})
+      .then((response)=>{
+        res.json({
+            message: 'Doctor fetched!',
+            users: response
+        });
+      });
+};
+
 
 // Handle index actions
 exports.get_pdf = function (req, res) {

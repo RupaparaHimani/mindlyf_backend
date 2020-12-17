@@ -16,7 +16,7 @@ const knex = require('knex')({
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'password',
+        password : 'root',
         database : 'mindlyf'
     }
   });

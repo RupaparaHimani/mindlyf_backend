@@ -14,9 +14,9 @@ const { sendMail } = require('../Utils/email')
 const knex = require('knex')({
     client: 'mysql',
     connection: {
-        host : 'localhost',
-        user : 'root',
-        password : 'password',
+        host: "root",
+        user: "root",
+        password: "password",
         database : 'mindlyf'
     }
   });

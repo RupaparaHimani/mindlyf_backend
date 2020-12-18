@@ -101,6 +101,9 @@ router.route("/get_blogs").get(blogController.get_blogs);
 // Appoinment
 router.route("/create_appoinment").post(appoinmentController.create_appoinment);
 router.route("/get_appoinments").get(appoinmentController.get_appoinments);
+router.route("/get_appoinment/:id").get(appoinmentController.get_appoinment);
+router.route("/update_appoinment").post(appoinmentController.update_appoinment);
+router.route("/delete_appoinment/:id").delete(appoinmentController.delete_appoinment);
 
 router.route("/get_tests").get(testController.get_tests);
 router.route("/get_paid_tests").get(testController.get_paid_tests);

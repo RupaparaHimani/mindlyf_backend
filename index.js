@@ -7,7 +7,6 @@ var cors = require('cors')
 // Initialise the app
 let app = express();
 // var mysql = require('mysql');
-
 global.__basedir = __dirname;
 
 // Import routes

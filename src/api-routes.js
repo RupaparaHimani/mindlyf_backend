@@ -87,6 +87,7 @@ router.route('/getservices')
 .get(serviceController.getServices);
 
 router.route('/getprograms') .get(programController.getPrograms);
+router.route('/get_ordered_programs') .get(programController.getOrderedPrograms);
 router.route("/create_program").post(programController.create_program);
 router.route("/get_program/:id").get(programController.get_program);
 router.route("/update_program").post(programController.update_program);

@@ -86,8 +86,11 @@ router.route("/captureOrder").get(orderCaptureController.captureOrder);
 router.route('/getservices')
 .get(serviceController.getServices);
 
-router.route('/getprograms')
-.get(programController.getPrograms);
+router.route('/getprograms') .get(programController.getPrograms);
+router.route("/create_program").post(programController.create_program);
+router.route("/get_program/:id").get(programController.get_program);
+router.route("/update_program").post(programController.update_program);
+router.route("/delete_program/:id").delete(programController.delete_program);
 
 //email
 router.route("/email").post(emailController.email);

@@ -1,23 +1,23 @@
 const knexConfig = ('../../index');
-const knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host: "localhost",
-      user: "root",
-      password: "KN<MS5JA~X0oaSqF",
-      database : 'mindlyfa_mindlyftest'
-    }
-  });
-
 // const knex = require('knex')({
 //     client: 'mysql',
 //     connection: {
-//         host : 'localhost',
-//         user : 'root',
-//         password : 'password',
-//         database : 'mindlyf'
+//       host: "localhost",
+//       user: "root",
+//       password: "KN<MS5JA~X0oaSqF",
+//       database : 'mindlyfa_mindlyftest'
 //     }
 //   });
+
+const knex = require('knex')({
+    client: 'mysql',
+    connection: {
+        host : 'localhost',
+        user : 'root',
+        password : 'root',
+        database : 'mindlyf'
+    }
+  });
 
 // Handle index actions
 exports.getPrograms = function (req, res) {
@@ -50,7 +50,7 @@ exports.getOrderedPrograms = function (req, res) {
 
 exports.create_program = function (req, res) {
   // console.log(req);
-    knex('t_programs').insert({userID: req.body.user_id, programID: req.body.program_id, purpose: req.body.purpose})
+    knex('t_orders').insert({userID: req.body.user_id, programID: req.body.program_id, purpose: req.body.purpose})
       .then((response)=>{
         knex.select()
         .from('t_orders')

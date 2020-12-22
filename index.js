@@ -9,6 +9,8 @@ let app = express();
 // var mysql = require('mysql');
 global.__basedir = __dirname;
 
+global.__FileLink = 'http://localhost:8080';
+
 // Import routes
 let apiRoutes = require("./src/api-routes");
 app.use(cors())
@@ -37,6 +39,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+
+app.use(express.static('public'));
 // Added check for DB connection
 var mysql = require('mysql');
 // var connection = mysql.createConnection({

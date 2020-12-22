@@ -115,4 +115,8 @@ router.route("/create_test").post(testController.create_test);
 
 router.route("/change_password").post(userController.change_password);
 
+router.route("/uploadCounsellorPdf").post(userController.uploadCounsellorPdf);
+
+
+
 module.exports = router;

@@ -24,7 +24,7 @@ const knex = require('knex')({
     // console.log(req);
       knex('t_appoinments').insert({patientID: req.body.patient_id, doctorID: req.body.doctor_id, date: req.body.date, time: req.body.time, interval_time: req.body.interval_time})
         .then((response)=>{
-          knex.select('id','patientID','doctorID','date', 'time')
+          knex.select('id','patientID','doctorID','date', 'time', 'interval_time')
           .from('t_appoinments')
           .where({id: response})
           .then((appoinment)=>{

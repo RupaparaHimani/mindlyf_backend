@@ -1,5 +1,22 @@
 Contact = require('../../Model/userModel');
 const { sendMail } = require('../../Utils/email')
+const path = require("path");
+const multer = require("multer");
+const fs = require("fs");
+var Buffer = require('buffer/').Buffer
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+   cb(null, __basedir + "/public/uploads/");
+   },
+   filename: (req, file, cb) => {
+     cb(null, `${Date.now()}-counsellor-${file.originalname}`);
+   },
+});
+
+const upload = multer({
+   storage: storage
+}).single("file");
 
 // const knex = require('knex')({
 //     client: 'mysql',
@@ -295,13 +312,14 @@ exports.order = function (req, res) {
 
 exports.getCounsellors = function(req, res){
   console.log("getCounsellors");
-  knex.select('id','number','email','first_name','last_name')
+  knex.select('id','number','email','first_name','last_name', 'pdf_blob')
     .from('t_user')
     .where({counsellor: 1})
     .then((response)=>{
       res.json({
           message: 'All counsellors fetched!',
-          data: response
+          data: response,
+          link : __FileLink + "/uploads/"
       })
     })
     .catch((err) => {
@@ -345,4 +363,43 @@ exports.deleteUser = function (req, res) {
         id: req.params.id
     });
   });
+}
+
+exports.uploadCounsellorPdf = function (req, res) {
+  console.log(req.params);
+
+  upload(req, res, (err) => {
+
+   var a = fs.readFileSync(req.file.path)
+
+      if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+     } else if (err) {
+         return res.status(500).json(err)
+     }
+     else if(res.status(200)){
+        knex.select('id', 'pdf_blob')
+        .from('t_user')
+        .where({id: req.body.id})
+        .update({
+          pdf_blob: req.file.filename
+        })
+        .then((response)=>{
+          res.json({
+              message: 'File upload successfully.',
+              // data: res.status(200).send(req.file)
+          });
+        })
+     }
+      
+
+      // knex('t_blogs').insert({title: req.body.title, description: req.body.description, pdf_blob: fs.readFileSync(req.file.path)})
+      //   .then((response)=>{
+      //     console.log(response);
+      //   })
+
+      // if(!err)
+      //    return res.sendStatus(200).end();
+   })
+
 }

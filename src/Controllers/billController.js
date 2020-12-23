@@ -19,7 +19,7 @@ const knex = require('knex')({
 //     }
 //   });
 
-exports.getBills = function (req, res) {
+exports.get_bills = function (req, res) {
   console.log("get Bills");
   knex.select()
     .from('t_orders')

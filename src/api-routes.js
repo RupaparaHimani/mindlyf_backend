@@ -20,6 +20,8 @@ var emailController = require('./Controllers/emailController');
 var blogController = require('./Controllers/blogController');
 var testController = require('./Controllers/testController');
 var appoinmentController = require('./Controllers/appoinmentController');
+var referralController = require('./Controllers/referralController');
+var billController = require('./Controllers/billController');
 
 // Contact routes
 router.route('/contacts')
@@ -108,6 +110,17 @@ router.route("/get_appoinments").get(appoinmentController.get_appoinments);
 router.route("/get_appoinment/:id").get(appoinmentController.get_appoinment);
 router.route("/update_appoinment").post(appoinmentController.update_appoinment);
 router.route("/delete_appoinment/:id").delete(appoinmentController.delete_appoinment);
+
+// Referral
+router.route("/create_referral").post(referralController.create_referral);
+router.route("/get_referrals").get(referralController.get_referrals);
+router.route("/get_referral/:id").get(referralController.get_referral);
+router.route("/update_referral").post(referralController.update_referral);
+router.route("/delete_referral/:id").delete(referralController.delete_referral);
+
+// Bill
+router.route("/get_bills").get(billController.get_bills);
+
 
 router.route("/get_tests").get(testController.get_tests);
 router.route("/get_paid_tests").get(testController.get_paid_tests);

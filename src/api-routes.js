@@ -121,8 +121,10 @@ router.route("/delete_referral/:id").delete(referralController.delete_referral);
 // Bill
 router.route("/get_bills").get(billController.getBills);
 router.route("/remaining_bill_patient_list").get(billController.remaining_bill_patient_list);
-router.route("/get_bill_bumber/:user_id").get(billController.get_bill_bumber);
+router.route("/get_bill_number/:user_id").get(billController.get_bill_number);
 router.route("/generate_bill").get(billController.generate_bill);
+router.route("/getPaymentPendingPatient/:user_id").get(billController.getPaymentPendingPatient);
+
 
 
 router.route("/get_tests").get(testController.get_tests);

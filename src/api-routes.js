@@ -119,13 +119,12 @@ router.route("/update_referral").post(referralController.update_referral);
 router.route("/delete_referral/:id").delete(referralController.delete_referral);
 
 // Bill
-router.route("/get_bills").get(billController.get_bills);
+router.route("/get_bills").get(billController.getBills);
 
 
 router.route("/get_tests").get(testController.get_tests);
 router.route("/get_paid_tests").get(testController.get_paid_tests);
 router.route("/create_test").post(testController.create_test);
-
 router.route("/change_password").post(userController.change_password);
 
 router.route("/uploadCounsellorPdf").post(userController.uploadCounsellorPdf);

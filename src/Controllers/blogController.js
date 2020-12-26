@@ -30,7 +30,7 @@ const upload = multer({
 //   });
 
 const knex = require('knex')({
-    client: 'mysql',
+    client: 'mysql', 
     connection: {
         host : 'localhost',
         user : 'root',
@@ -45,7 +45,9 @@ const knex = require('knex')({
     upload(req, res, (err) => {
       knex('t_blogs').insert({title: req.body.title, description: req.body.description, image: fs.readFileSync(req.file.path)})
         .then((response)=>{
-          console.log(response);
+          res.json({
+          message: 'Blog Created Done',
+      });
         })
       if(!err)
          return res.sendStatus(200).end();
@@ -54,17 +56,30 @@ const knex = require('knex')({
 
   exports.updateBlog = function (req, res) {
 
-    // console.log(req);
+    console.log(req.body);
     // if(req.body.image != ''){
+      upload(req, res, (err) => {
+      var valData = {};
+      if(req.body.updateImage == 'true'){
+        valData.title = req.body.title
+        valData.description = req.body.description
+        valData.image = fs.readFileSync(req.file.path)
+      }
+      else{
+        valData.title = req.body.title
+        valData.description = req.body.description
+      }
+      console.log("valData",valData,req.body.title)
       knex.select('id', 'title', 'description', 'image')
         .from('t_blogs')
         .where({id: req.body.id})
-        .update({
-          title: req.body.title, description: req.body.description
-        })
+        .update(valData)
         .then((response)=>{
-          console.log("error", response);
+            res.json({
+          message: 'Blog Save Done',
+      });
         })
+      });
     // }
    //  else{
    //    upload(req, res, (err) => {

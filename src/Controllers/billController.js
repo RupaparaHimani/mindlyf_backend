@@ -88,60 +88,7 @@ exports.getPaymentPendingPatient = function (req, res) {
 //    .on('t_tests.amount', '>', 't_orders.amount')
 // }, 'left')
 
-// var q = knex
-//         .select(
-//             'to.id',
-//             'to.userID AS userID',
-//             'to.amount AS paidAmount',
-//             'tt.amount AS testAmount',
-//             'tp.amount AS proAmount',
-//             'ts.amount AS serAmount'
-//         )
-//         .from('t_orders AS to')
-//         .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
-//         .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
-//         .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
-//         // .where('to.userID', '=', req.params.user_id)
-//         .Where(function() {
-//             this.where('to.amount', '>', 'tt.amount')
-//           .andWhere('to.amount', '>', 'tp.amount')
-//           .andWhere('to.amount', '>', 'ts.amount')
-//           }
-//         )
-//         .andWhere(function() {
-//             this.where('to.amount', '!=', 'tt.amount')
-//           .andWhere('to.amount', '!=', 'tp.amount')
-//           .andWhere('to.amount', '!=', 'ts.amount')
-//           }
-//         )
-//         // .orWhere(
-//           // function() {
-//           //   this.where('to.amount', '!=', 'tp.amount')
-//           //   // .andWhere('to.amount', '>', 'tp.amount')
-//           // }
-//         // )
-//         // .orWhere(
-//         //   function() {
-//         //   this.where('to.amount', '!=', 'ts.amount')
-//         //   // .andWhere('to.amount', '>', 'ts.amount')
-//         // })
-//         .then((response)=>{
-//           var value = []
-//           response.forEach((val,i)=>{
-//               if(val.paidAmount != val.testAmount &&
-//               val.paidAmount != val.proAmount &&
-//               val.paidAmount != val.serAmount ){
-//                 value.push(val);
-//               }
-//           });
-
-//       res.json({
-//           message: 'fetched remaining_bill_patient_list',
-//           data: value
-//       });
-//     });
-
-  var q = knex
+var q = knex
         .select(
             'to.id',
             'to.userID AS userID',
@@ -154,24 +101,36 @@ exports.getPaymentPendingPatient = function (req, res) {
         .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
         .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
         .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
-        .where('to.userID', '=', 'to.userID')
-        .orWhere('to.amount', '>', 'tt.amount')
-        .orWhere('to.amount', '>', 'tp.amount')
-        .orWhere('to.amount', '>', 'ts.amount')
+        .where('1', '=', '1')
+        .andWhere(function() {
+            this.where('to.amount', '>', 'tt.amount')
+          .andWhere('to.amount', '>', 'tp.amount')
+          .andWhere('to.amount', '>', 'ts.amount')
+          }
+        )
+        .andWhere(function() {
+            this.where('to.amount', '!=', 'tt.amount')
+          .andWhere('to.amount', '!=', 'tp.amount')
+          .andWhere('to.amount', '!=', 'ts.amount')
+          }
+        )
+        // .orWhere(
+          // function() {
+          //   this.where('to.amount', '!=', 'tp.amount')
+          //   // .andWhere('to.amount', '>', 'tp.amount')
+          // }
+        // )
+        // .orWhere(
+        //   function() {
+        //   this.where('to.amount', '!=', 'ts.amount')
+        //   // .andWhere('to.amount', '>', 'ts.amount')
+        // })
         .then((response)=>{
           var value = []
           response.forEach((val,i)=>{
-              if(
-                (val.paidAmount != val.testAmount &&
+              if(val.paidAmount != val.testAmount &&
               val.paidAmount != val.proAmount &&
-              val.paidAmount != val.serAmount) 
-                &&
-              (
-                val.testAmount != null ||
-                val.proAmount != null ||
-                val.serAmount != null
-              )
-               ){
+              val.paidAmount != val.serAmount ){
                 value.push(val);
               }
           });
@@ -181,6 +140,47 @@ exports.getPaymentPendingPatient = function (req, res) {
           data: value
       });
     });
+
+  // var q = knex
+  //       .select(
+  //           'to.id',
+  //           'to.userID AS userID',
+  //           'to.amount AS paidAmount',
+  //           'tt.amount AS testAmount',
+  //           'tp.amount AS proAmount',
+  //           'ts.amount AS serAmount'
+  //       )
+  //       .from('t_orders AS to')
+  //       .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
+  //       .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
+  //       .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
+  //       .where('to.userID', '=', 'to.userID')
+  //       .orWhere('to.amount', '>', 'tt.amount')
+  //       .orWhere('to.amount', '>', 'tp.amount')
+  //       .orWhere('to.amount', '>', 'ts.amount')
+  //       .then((response)=>{
+  //         var value = []
+  //         response.forEach((val,i)=>{
+  //             if(
+  //               (val.paidAmount != val.testAmount &&
+  //             val.paidAmount != val.proAmount &&
+  //             val.paidAmount != val.serAmount) 
+  //               &&
+  //             (
+  //               val.testAmount != null ||
+  //               val.proAmount != null ||
+  //               val.serAmount != null
+  //             )
+  //              ){
+  //               value.push(val);
+  //             }
+  //         });
+
+  //     res.json({
+  //         message: 'fetched remaining_bill_patient_list',
+  //         data: value
+  //     });
+  //   });
 
 
   // knex.distinct('userID')

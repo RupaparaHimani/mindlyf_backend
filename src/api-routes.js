@@ -122,9 +122,9 @@ router.route("/delete_referral/:id").delete(referralController.delete_referral);
 router.route("/get_bills").get(billController.getBills);
 router.route("/remaining_bill_patient_list").get(billController.remaining_bill_patient_list);
 router.route("/get_bill_number/:user_id").get(billController.get_bill_number);
-router.route("/generate_bill").get(billController.generate_bill);
+router.route("/generate_bill").post(billController.generate_bill);
 router.route("/getPaymentPendingPatient/:user_id").get(billController.getPaymentPendingPatient);
-
+router.route("/get_bill_payments").get(billController.get_bill_payments);
 
 
 router.route("/get_tests").get(testController.get_tests);

@@ -34,9 +34,13 @@ exports.getBills = function (req, res) {
 
 exports.remaining_bill_patient_list = function (req, res) {
  
-  knex.distinct('userID')
+  knex.select('id', 'userID', 'serviceID', 'programID', 'testID', 'amount', 'totalAmount')
     .from('t_orders')
-    .where({amount: 0})
+    .where('serviceID', '!=', 'null')
+    .orWhere('programID', '!=', 'null')
+    .orWhere('testID', '!=', 'null')
+    .andWhere("amount", "<", knex.ref("totalAmount"))
+    .andWhere("amount", "!=", knex.ref("totalAmount"))
     .then((response)=>{
       res.json({
           message: 'fetched remaining_bill_patient_list',
@@ -47,7 +51,7 @@ exports.remaining_bill_patient_list = function (req, res) {
 
 exports.get_bill_number = function (req, res) {
   console.log("get get_bill_number");
-  knex.select('id', 'userID', 'serviceID', 'programID', 'testID', 'amount')
+  knex.select('id', 'userID', 'serviceID', 'programID', 'testID', 'amount', 'totalAmount')
     .from('t_orders')
     .where({userID: req.params.user_id})
     .then((response)=>{
@@ -67,9 +71,12 @@ exports.generate_bill = function (req, res) {
       amount: req.body.amount
     })
     .then((response)=>{
-      knex('t_bill_payments').insert({orderID: req.body.id, amount: req.body.amount, created_date: new Date()})
+      knex('t_bill_payments').insert({order_id: req.body.id, amount: req.body.amount, created_date: new Date()})
       .then((response)=>{
-          console.log(response);
+          res.json({
+          message: 'fetched remaining_bill_patient_list',
+          data: response
+      });
         })
       .catch((err) => {
               console.log(err);
@@ -79,6 +86,18 @@ exports.generate_bill = function (req, res) {
     })
 };
 
+exports.get_bill_payments = function (req, res) {
+  console.log("get get_bill_payments");
+  knex.select('id', 'orderID', 'amount', 'created_at')
+    .from('t_order_payments')
+    .where({userID: req.params.order_id})
+    .then((response)=>{
+      res.json({
+          message: 'fetched get_bill_payments',
+          data: response
+      });
+    });
+};
 
 exports.getPaymentPendingPatient = function (req, res) {
   console.log("get remaining_bill_patient_list");
@@ -101,8 +120,8 @@ var q = knex
         .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
         .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
         .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
-        .where('1', '=', '1')
-        .andWhere(function() {
+        .where('to.amount', '>=', 0)
+        .Where(function() {
             this.where('to.amount', '>', 'tt.amount')
           .andWhere('to.amount', '>', 'tp.amount')
           .andWhere('to.amount', '>', 'ts.amount')

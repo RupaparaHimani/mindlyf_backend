@@ -110,6 +110,7 @@ router.route("/get_appoinments").get(appoinmentController.get_appoinments);
 router.route("/get_appoinment/:id").get(appoinmentController.get_appoinment);
 router.route("/update_appoinment").post(appoinmentController.update_appoinment);
 router.route("/delete_appoinment/:id").delete(appoinmentController.delete_appoinment);
+router.route("/get_appoinment_DrTime/:doctorID").get(appoinmentController.get_appoinment_DrTime);
 
 // Referral
 router.route("/create_referral").post(referralController.create_referral);

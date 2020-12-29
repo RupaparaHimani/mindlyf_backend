@@ -24,6 +24,13 @@ const knex = require('knex')({
     // console.log(req);
       knex('t_appoinments').insert({patientID: req.body.patient_id, doctorID: req.body.doctor_id, date: req.body.date, time: req.body.time, interval_time: req.body.interval_time})
         .then((response)=>{
+
+
+        	 knex('t_appoinments_drtime').
+        	 insert({patientID: req.body.patient_id, doctorID: req.body.doctor_id, date: req.body.date, time: req.body.time, interval_time: req.body.interval_time}).then((response1)=>{
+        	 	console.log(response1)
+        	 })
+
           knex.select('id','patientID','doctorID','date', 'time', 'interval_time')
           .from('t_appoinments')
           .where({id: response})
@@ -79,6 +86,11 @@ const knex = require('knex')({
           interval_time: req.body.interval_time
         })
         .then((response)=>{
+
+        	knex('t_appoinments_drtime').
+        	 insert({patientID: req.body.patient_id, doctorID: req.body.doctor_id, date: req.body.date, time: req.body.time, interval_time: req.body.interval_time}).then((response1)=>{
+        	 	console.log(response1)
+        	 })
           knex.select('id','patientID','doctorID','date', 'time')
           .from('t_appoinments')
           .where({id: req.body.id})
@@ -108,3 +120,15 @@ const knex = require('knex')({
       });
     });
   }
+
+  exports.get_appoinment_DrTime = function (req, res) {
+    knex.select('id','patientID', 'doctorID','date', 'time', 'interval_time')
+      .from('t_appoinments_drtime')
+      .where({doctorID: req.params.doctorID})
+      .then((response)=>{
+        res.json({
+            message: 'Fetched t_appoinments_drtime',
+            appoinmentTime: response
+        });
+      })
+  };

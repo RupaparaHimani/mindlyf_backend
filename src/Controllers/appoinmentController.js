@@ -122,9 +122,12 @@ const knex = require('knex')({
   }
 
   exports.get_appoinment_DrTime = function (req, res) {
+  	  	console.log(req.params.doctorID,req.params.Date)
+
     knex.select('id','patientID', 'doctorID','date', 'time', 'interval_time')
       .from('t_appoinments_drtime')
       .where({doctorID: req.params.doctorID})
+      .andWhere({date: req.params.Date})
       .then((response)=>{
         res.json({
             message: 'Fetched t_appoinments_drtime',

@@ -23,7 +23,7 @@ const knex = require('knex')({
 
 
 exports.auth = function (req, res) {
-    knex.select('id','number','email','first_name','last_name')
+    knex.select('id','number','email','first_name','last_name','user_type')
       .from('t_user')
       .where({email: req.body.email})
       .andWhere({password: req.body.password})

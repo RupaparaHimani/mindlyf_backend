@@ -49,7 +49,8 @@ const knex = require('knex')({
   };
 
   exports.get_appoinments = function (req, res) {
-    knex.select('id','patientID','doctorID','date', 'time', 'interval_time')
+  	if(req.body.appId == ''){
+       knex.select('id','patientID','doctorID','date', 'time', 'interval_time')
       .from('t_appoinments')
       .then((response)=>{
         res.json({
@@ -57,6 +58,19 @@ const knex = require('knex')({
             data: response
         });
       });
+    }
+   else{
+    knex.select('id','patientID','doctorID','date', 'time', 'interval_time')
+      .from('t_appoinments')
+      .where({doctorID : req.body.appId})
+      .then((response)=>{
+        res.json({
+            message: 'fetched appoinments',
+            data: response
+        });
+      });
+   }
+    
   };
 
   exports.get_appoinment = function (req, res) {

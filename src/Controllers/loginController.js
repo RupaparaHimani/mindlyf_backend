@@ -14,9 +14,9 @@ const { sendMail } = require('../Utils/email')
 const knex = require('knex')({
     client: 'mysql',
     connection: {
-        host : 'localhost',
-        user : 'root',
-        password : 'root',
+        host: "localhost",
+        user: "root",
+        password: "password",
         database : 'mindlyf'
     }
   });
@@ -28,6 +28,7 @@ exports.auth = function (req, res) {
       .where({email: req.body.email})
       .andWhere({password: req.body.password})
       .then((response)=>{
+        console.log(response.length);
           if (response.length===0) {
             res.json({
                 message: 'No user found',
@@ -45,7 +46,7 @@ exports.auth = function (req, res) {
 };
 
 exports.sign = function (req, res) {
-  console.log(req.body);
+
     knex('t_user').where({email: req.body.email}).then((response) => {
         console.log(response)
         if(response.length){
@@ -75,10 +76,11 @@ exports.sign = function (req, res) {
             type = req.body.type
           else
             type = 'online'
-          if(req.body.schedule != undefined)
-            schedule = JSON.stringify( req.body.schedule);
-          else
-            schedule = ''
+
+            if(req.body.schedule != undefined)
+              schedule = JSON.stringify( req.body.schedule);
+            else
+              schedule = ''
             knex('t_user').insert({number: req.body.number, email: req.body.email, first_name: req.body.fname, last_name: req.body.lname, password: req.body.password, comment: req.body.comment, counsellor: req.body.counsellor, user_type: user_type, type: type, schedule: schedule})
             .then((response)=>{
                 knex.select('id','number','email','first_name','last_name')

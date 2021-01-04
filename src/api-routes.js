@@ -22,6 +22,7 @@ var testController = require('./Controllers/testController');
 var appoinmentController = require('./Controllers/appoinmentController');
 var referralController = require('./Controllers/referralController');
 var billController = require('./Controllers/billController');
+var dashboardController = require('./Controllers/dashboardController');
 
 // Contact routes
 router.route('/contacts')
@@ -115,6 +116,7 @@ router.route("/get_appoinment_DrTime/:doctorID/:Date").get(appoinmentController.
 // Referral
 router.route("/create_referral").post(referralController.create_referral);
 router.route("/get_referrals").get(referralController.get_referrals);
+router.route("/get_doctors_referrals").get(referralController.get_doctors_referrals);
 router.route("/get_referral/:id").get(referralController.get_referral);
 router.route("/update_referral").post(referralController.update_referral);
 router.route("/delete_referral/:id").delete(referralController.delete_referral);
@@ -135,6 +137,17 @@ router.route("/change_password").post(userController.change_password);
 
 router.route("/uploadCounsellorPdf").post(userController.uploadCounsellorPdf);
 
+router.route("/get_patient_count").get(dashboardController.get_patient_count);
+router.route("/get_online_patient_count").get(dashboardController.get_online_patient_count);
+router.route("/get_offline_patient_count").get(dashboardController.get_offline_patient_count);
+router.route("/get_most_booked_program_count").get(dashboardController.get_most_booked_program_count);
+router.route("/get_most_booked_test_count").get(dashboardController.get_most_booked_test_count);
+router.route("/get_most_booked_service_count").get(dashboardController.get_most_booked_service_count);
+router.route("/get_doctor_appoinment_count").get(dashboardController.get_doctor_appoinment_count);
+// wesite
+router.route("/my_services").get(dashboardController.my_services);
+router.route("/my_programs").get(dashboardController.my_programs);
+router.route("/my_tests").get(dashboardController.my_tests);
 
 
 module.exports = router;

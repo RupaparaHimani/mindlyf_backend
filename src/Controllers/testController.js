@@ -1,5 +1,5 @@
 const knexConfig = ('../../index');
-
+// 
 // const knex = require('knex')({
 //     client: 'mysql',
 //     connection: {
@@ -15,7 +15,7 @@ const knex = require('knex')({
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'root',
+        password : 'password',
         database : 'mindlyf'
     }
   });

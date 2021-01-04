@@ -14,8 +14,7 @@ const knex = require('knex')({
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'root',
-
+        password : 'password',
         database : 'mindlyf'
     }
   });
@@ -33,7 +32,7 @@ exports.getBills = function (req, res) {
 };
 
 exports.remaining_bill_patient_list = function (req, res) {
- 
+
   knex.select('id', 'userID', 'serviceID', 'programID', 'testID', 'amount', 'totalAmount')
     .from('t_orders')
     .where('serviceID', '!=', 'null')
@@ -61,6 +60,20 @@ exports.get_bill_number = function (req, res) {
       });
     });
 };
+
+exports.get_bill_payments = function (req, res) {
+  console.log("get get_bill_payments");
+  knex.select('id', 'orderID', 'amount', 'created_at')
+    .from('t_order_payments')
+    .where({userID: req.params.order_id})
+    .then((response)=>{
+      res.json({
+          message: 'fetched get_bill_payments',
+          data: response
+      });
+    });
+};
+
 
 exports.generate_bill = function (req, res) {
   console.log("get generate_bill");
@@ -107,7 +120,60 @@ exports.getPaymentPendingPatient = function (req, res) {
 //    .on('t_tests.amount', '>', 't_orders.amount')
 // }, 'left')
 
-var q = knex
+// var q = knex
+//         .select(
+//             'to.id',
+//             'to.userID AS userID',
+//             'to.amount AS paidAmount',
+//             'tt.amount AS testAmount',
+//             'tp.amount AS proAmount',
+//             'ts.amount AS serAmount'
+//         )
+//         .from('t_orders AS to')
+//         .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
+//         .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
+//         .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
+//         // .where('to.userID', '=', req.params.user_id)
+//         .Where(function() {
+//             this.where('to.amount', '>', 'tt.amount')
+//           .andWhere('to.amount', '>', 'tp.amount')
+//           .andWhere('to.amount', '>', 'ts.amount')
+//           }
+//         )
+//         .andWhere(function() {
+//             this.where('to.amount', '!=', 'tt.amount')
+//           .andWhere('to.amount', '!=', 'tp.amount')
+//           .andWhere('to.amount', '!=', 'ts.amount')
+//           }
+//         )
+//         // .orWhere(
+//           // function() {
+//           //   this.where('to.amount', '!=', 'tp.amount')
+//           //   // .andWhere('to.amount', '>', 'tp.amount')
+//           // }
+//         // )
+//         // .orWhere(
+//         //   function() {
+//         //   this.where('to.amount', '!=', 'ts.amount')
+//         //   // .andWhere('to.amount', '>', 'ts.amount')
+//         // })
+//         .then((response)=>{
+//           var value = []
+//           response.forEach((val,i)=>{
+//               if(val.paidAmount != val.testAmount &&
+//               val.paidAmount != val.proAmount &&
+//               val.paidAmount != val.serAmount ){
+//                 value.push(val);
+//               }
+//           });
+
+//       res.json({
+//           message: 'fetched remaining_bill_patient_list',
+//           data: value
+//       });
+//     });
+
+  var q = knex
         .select(
             'to.id',
             'to.userID AS userID',
@@ -147,9 +213,17 @@ var q = knex
         .then((response)=>{
           var value = []
           response.forEach((val,i)=>{
-              if(val.paidAmount != val.testAmount &&
+              if(
+                (val.paidAmount != val.testAmount &&
               val.paidAmount != val.proAmount &&
-              val.paidAmount != val.serAmount ){
+              val.paidAmount != val.serAmount)
+                &&
+              (
+                val.testAmount != null ||
+                val.proAmount != null ||
+                val.serAmount != null
+              )
+               ){
                 value.push(val);
               }
           });
@@ -159,47 +233,6 @@ var q = knex
           data: value
       });
     });
-
-  // var q = knex
-  //       .select(
-  //           'to.id',
-  //           'to.userID AS userID',
-  //           'to.amount AS paidAmount',
-  //           'tt.amount AS testAmount',
-  //           'tp.amount AS proAmount',
-  //           'ts.amount AS serAmount'
-  //       )
-  //       .from('t_orders AS to')
-  //       .leftJoin('t_tests AS tt', 'tt.id', 'to.testID')
-  //       .leftJoin('t_programs AS tp', 'tp.id', 'to.programID')
-  //       .leftJoin('t_services AS ts', 'ts.id', 'to.serviceID')
-  //       .where('to.userID', '=', 'to.userID')
-  //       .orWhere('to.amount', '>', 'tt.amount')
-  //       .orWhere('to.amount', '>', 'tp.amount')
-  //       .orWhere('to.amount', '>', 'ts.amount')
-  //       .then((response)=>{
-  //         var value = []
-  //         response.forEach((val,i)=>{
-  //             if(
-  //               (val.paidAmount != val.testAmount &&
-  //             val.paidAmount != val.proAmount &&
-  //             val.paidAmount != val.serAmount) 
-  //               &&
-  //             (
-  //               val.testAmount != null ||
-  //               val.proAmount != null ||
-  //               val.serAmount != null
-  //             )
-  //              ){
-  //               value.push(val);
-  //             }
-  //         });
-
-  //     res.json({
-  //         message: 'fetched remaining_bill_patient_list',
-  //         data: value
-  //     });
-  //   });
 
 
   // knex.distinct('userID')

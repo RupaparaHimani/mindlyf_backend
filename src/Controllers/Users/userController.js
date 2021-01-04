@@ -33,7 +33,7 @@ const knex = require('knex')({
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'root',
+        password : 'password',
         database : 'mindlyf'
     }
   });
@@ -94,7 +94,7 @@ exports.get_pdf = function (req, res) {
 
 exports.getOrder = function (req, res) {
   console.log("getorssderrr");
-  knex.select('id','userID','order_time','amount','purpose', 'serviceID', 'programID')
+  knex.select('id','userID','order_time','amount','purpose', 'serviceID', 'programID', 'testID')
     .from('t_orders')
     .where({userID: req.body.id})
     .then((response)=>{
@@ -316,6 +316,7 @@ exports.getCounsellors = function(req, res){
     .from('t_user')
     .where({counsellor: 1})
     .then((response)=>{
+      console.log(response);
       res.json({
           message: 'All counsellors fetched!',
           data: response,
@@ -362,7 +363,12 @@ exports.deleteUser = function (req, res) {
         message: 'Delete User',
         id: req.params.id
     });
-  });
+  }).catch((err) => {
+    res.json({
+        message: 'Not able to delete this user is used.',
+    });
+  })
+
 }
 
 exports.uploadCounsellorPdf = function (req, res) {
@@ -391,7 +397,7 @@ exports.uploadCounsellorPdf = function (req, res) {
           });
         })
      }
-      
+
 
       // knex('t_blogs').insert({title: req.body.title, description: req.body.description, pdf_blob: fs.readFileSync(req.file.path)})
       //   .then((response)=>{

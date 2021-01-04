@@ -1,24 +1,24 @@
 const knexConfig = ('../../index');
 
-// const knex = require('knex')({
-//     client: 'mysql',
-//     connection: {
-//       host: "localhost",
-//       user: "root",
-//       password: "KN<MS5JA~X0oaSqF",
-//       database : 'mindlyfa_mindlyfreferral'
-//     }
-//   });
-
 const knex = require('knex')({
     client: 'mysql',
     connection: {
-        host : 'localhost',
-        user : 'root',
-        password : 'root',
-        database : 'mindlyf'
+      host: "localhost",
+      user: "root",
+      password: "KN<MS5JA~X0oaSqF",
+      database : 'mindlyfa_mindlyftest'
     }
   });
+
+// const knex = require('knex')({
+//     client: 'mysql',
+//     connection: {
+//         host : 'localhost',
+//         user : 'root',
+//         password : 'password',
+//         database : 'mindlyf'
+//     }
+//   });
 
   exports.create_referral = function (req, res) {
     // console.log(req);
@@ -51,6 +51,28 @@ const knex = require('knex')({
         });
       });
   };
+
+
+  exports.get_doctors_referrals = function (req, res) {
+    var refer_to_name = ''
+    if(req.query.refer_to_name.includes("+")){
+      refer_to_name = req.query.refer_to_name.split('+').join(' ')
+    }else{
+        refer_to_name = req.query.refer_to_name
+    }
+    console.log(refer_to_name);
+    knex.select()
+      .from('t_referrals')
+      .where({refer_to_name: refer_to_name})
+      .andWhere({from: 'patient'})
+      .then((response)=>{
+        res.json({
+            message: 'fetched referrals',
+            data: response
+        });
+      });
+  };
+
 
   exports.get_referral = function (req, res) {
     console.log("info", req.params.id);

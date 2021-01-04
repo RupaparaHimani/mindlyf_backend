@@ -6,7 +6,7 @@ const knexConfig = ('../../index');
 //       host: "localhost",
 //       user: "root",
 //       password: "KN<MS5JA~X0oaSqF",
-//       database : 'mindlyfa_mindlyfappoinment'
+//       database : 'mindlyfa_mindlyftest'
 //     }
 //   });
 
@@ -15,10 +15,12 @@ const knex = require('knex')({
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'root',
+        password : 'password',
         database : 'mindlyf'
     }
   });
+
+
 
   exports.create_appoinment = function (req, res) {
     // console.log(req);
@@ -70,7 +72,7 @@ const knex = require('knex')({
         });
       });
    }
-    
+
   };
 
   exports.get_appoinment = function (req, res) {

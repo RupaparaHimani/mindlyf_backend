@@ -30,11 +30,11 @@ const upload = multer({
 //   });
 
 const knex = require('knex')({
-    client: 'mysql', 
+    client: 'mysql',
     connection: {
         host : 'localhost',
         user : 'root',
-        password : 'root',
+        password : 'password',
         database : 'mindlyf'
     }
   });
@@ -43,11 +43,21 @@ const knex = require('knex')({
   exports.create_blog = function (req, res) {
     // console.log(req);
     upload(req, res, (err) => {
-      knex('t_blogs').insert({title: req.body.title, description: req.body.description, image: fs.readFileSync(req.file.path)})
+      var valData = {};
+      if(req.body.updateImage == 'true'){
+        valData.title = req.body.title
+        valData.description = req.body.description
+        valData.image = fs.readFileSync(req.file.path)
+      }
+      else{
+        valData.title = req.body.title
+        valData.description = req.body.description
+      }
+      knex('t_blogs').insert(valData)
         .then((response)=>{
           res.json({
-          message: 'Blog Created Done',
-      });
+            message: 'Blog Created Done',
+          });
         })
       if(!err)
          return res.sendStatus(200).end();
@@ -97,6 +107,7 @@ const knex = require('knex')({
    //   })
    // }
   };
+
 
 
   exports.get_blog = function (req, res) {
